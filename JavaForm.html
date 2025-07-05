@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="JavaForm.css">
+    <title>Calculator</title>
+    <title>Document</title>
+</head>
+<body>
+<div id="con1">
+    <h1>Please Resigter Yourself</h1>
+    
+    <form id="registrationForm"> 
+        <div class="blocks">
+        Full Name:       <input type="text" id="Fullname" value="name">
+        <small id="fullNameError" class="error-message"></small>
+    </div>
+    
+    <div class="blocks">
+        Email ID :       <input type="text" id="email"  value="abc@demo.com">
+        <small id="emailError" class="error-message"></small>
+    </div>
+   
+    <div class="blocks">
+        Phone No.:       <input type="text" id="number">
+        <small id="phoneError" class="error-message"></small>
+    </div>
+    
+    <div class="blocks">
+            Password :       <input type="password" id="pass">
+            <small id="passwordError" class="error-message"></small>
+    </div>
+   
+    <div class="blocks">
+        Confirm Password:    <input type="password" id="confpass">
+        <small id="confirmPasswordError" class="error-message"></small>
+    </div>
+    <div class="blocks">
+        <button type="submit">Submit</button>
+    </div>  
+    
+    </form>
+
+</div>
+<script src="JavaForm.js"></script>
+</body>
+</html>

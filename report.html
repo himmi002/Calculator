@@ -1,0 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { ArrowDownIcon, ArrowUpIcon, Leaf, Recycle, Zap } from 'lucide-react';
+
+const generateData = (baseline, improvement) => {
+  return Array.from({ length: 12 }, (_, i) => ({
+    month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
+    value: Math.max(0, baseline - (improvement * i / 11))
+  }));
+};
+
+const MetricCard = ({ title, value, change, icon: Icon }) => (
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      <Icon className="h-4 w-4 text-muted-foreground" />
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">{value}</div>
+      <p className={`text-xs ${change < 0 ? 'text-green-500' : 'text-red-500'} flex items-center`}>
+        {change < 0 ? <ArrowDownIcon className="h-4 w-4 mr-1" /> : <ArrowUpIcon className="h-4 w-4 mr-1" />}
+        {Math.abs(change)}% from last month
+      </p>
+    </CardContent>
+  </Card>
+);
+
+const SupplierScorecard = ({ name, score }) => (
+  <div className="flex items-center justify-between mb-2">
+    <span>{name}</span>
+    <div className="flex items-center">
+      <Progress value={score} className="w-24 mr-2" />
+      <span>{score}/100</span>
+    </div>
+  </div>
+);
+
+const SustainAIDashboard = () => {
+  const [activeTab, setActiveTab] = useState("carbon");
+  const [metrics, setMetrics] = useState({
+    carbon: { value: 1000, change: -5 },
+    energy: { value: 5000, change: -3 },
+    waste: { value: 200, change: -7 },
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics(prev => ({
+        carbon: { value: prev.carbon.value * 0.99, change: prev.carbon.change - 0.1 },
+        energy: { value: prev.energy.value * 0.995, change: prev.energy.change - 0.05 },
+        waste: { value: prev.waste.value * 0.98, change: prev.waste.change - 0.15 },
+      }));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const data = {
+    carbon: generateData(1000, 200),
+    energy: generateData(5000, 1000),
+    waste: generateData(200, 50),
+  };
+
+  return (
+    <div className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">SustainAI Dashboard</h1>
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <MetricCard title="Carbon Emissions" value={`${metrics.carbon.value.toFixed(2)} kg`} change={metrics.carbon.change} icon={Leaf} />
+        <MetricCard title="Energy Use" value={`${metrics.energy.value.toFixed(2)} kWh`} change={metrics.energy.change} icon={Zap} />
+        <MetricCard title="Waste" value={`${metrics.waste.value.toFixed(2)} kg`} change={metrics.waste.change} icon={Recycle} />
+      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+        <TabsList>
+          <TabsTrigger value="carbon">Carbon Emissions</TabsTrigger>
+          <TabsTrigger value="energy">Energy Use</TabsTrigger>
+          <TabsTrigger value="waste">Waste</TabsTrigger>
+        </TabsList>
+        {Object.entries(data).map(([key, chartData]) => (
+          <TabsContent key={key} value={key}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{key.charAt(0).toUpperCase() + key.slice(1)} Trends</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
+      <Card>
+        <CardHeader>
+          <CardTitle>Supplier Sustainability Scorecard</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SupplierScorecard name="EcoFriendly Co." score={85} />
+          <SupplierScorecard name="GreenTech Industries" score={78} />
+          <SupplierScorecard name="Sustainable Solutions Ltd." score={92} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default SustainAIDashboard;

@@ -1,0 +1,49 @@
+
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-size;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color:black;
+}
+
+.blocks{
+    color: gold ;
+    text-align: center;
+    padding: 2.5%;
+   font-size: 30px;
+  transition: all;
+  transition-delay: 0s;
+}
+input{
+    font-size: 25px;
+    background-color: white;
+}
+h1{
+    text-align: center;
+    padding: 1%;
+    color: whitesmoke;
+}
+button{
+    font-size: 35px;
+    color: whitesmoke;
+}
+div:hover {
+    color : gold;
+    font-size:25px ;
+
+}
+h1:hover {
+    color : gold;
+}
+input:hover{
+    font-size: 30px;
+    background-color: gold;
+}
+button:hover{
+    font-size: 30px;
+    background-color: gold;
+}
+small{
+    color : red;
+}
